@@ -1,0 +1,13 @@
+IT Ticket #7734 — Closed
+Subject: KeePass master password policy exception request
+Requester: M. van den Berg (CEO)
+Owner: d.jansen@nordwind-logistics.nl
+
+CEO requested personal vault password match laptop login pattern:
+CompanyName + current calendar year (e.g. Nordwind + 2024).
+Approved for nordwind_passwords.kdbx on Finance share only.
+
+Security note: run password audit against password_audit_wordlist.txt
+before next tabletop — weak patterns flagged Q4 2024.
+
+Resolution: exception documented. Remind finance to use KeePass auto-type.

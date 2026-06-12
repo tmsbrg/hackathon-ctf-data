@@ -57,6 +57,15 @@ These need **extra tooling** beyond plain `rga`. Not required for the main flag,
 | 21 | **Bonus flag (kube)** | Kubernetes kubeconfig | `rga --hidden` on `.kube/config` |
 | 22 | MongoDB dev password | Warehouse `docker-compose.yml` | `rga` on compose |
 | 23 | Vault unseal key | Legacy `vault.hcl` | `rga` on `.hcl` |
+| 24 | **Bonus flag (KeePass)** | `Finance/nordwind_passwords.kdbx` | Brute force master password |
+| 25 | Datadog API key | Inside KeePass vault | After unlock |
+| 26 | Customs broker API key | Inside KeePass vault | After unlock |
+| 27 | PKCS12 cert password | KeePass → `broker_client_auth.p12` | `openssl pkcs12 -info` |
+| 28 | Java keystore password | KeePass → `nw-portal.jks` | `keytool -list` |
+
+**KeePass brute force:** master password follows `CompanyName + year` (see ticket #7734). Try `IT/backups/password_audit_wordlist.txt` with john/hashcat (`keepass2john`, mode 13400) or `keepassxc-cli open`.
+
+**`.env` files** in `IT/deploy/`, `Finance/`, etc. — some secrets in plaintext, others point at the KeePass vault.
 
 The dump also includes **decoy config cruft** in formats from real breach hunts: `.properties`, `.toml`, `.ora`, `server.xml`, `web.config`, `NuGet.Config`, `.netrc`, `.pgpass`, CI YAML, and more.
 
@@ -71,6 +80,9 @@ tesseract         # OCR for scanned PDFs and PNG screenshots
 exiftool          # image metadata (EXIF)
 7z                # extract .7z inside zip archives
 unzip             # peek inside .xlsx (Office Open XML is a zip)
+keepassxc-cli     # open .kdbx vaults (or john's keepass2john + hashcat -m 13400)
+keytool           # inspect .jks keystores (JDK)
+openssl pkcs12    # unlock .p12 bundles
 ```
 
 Optional install:
@@ -78,7 +90,7 @@ Optional install:
 ```bash
 # Debian/Ubuntu
 sudo apt install ripgrep-all trufflehog tesseract-ocr exiftool p7zip-full
-pip install openpyxl pillow reportlab   # only needed to regenerate the dump
+pip install -r requirements-generate.txt   # only needed to regenerate the dump
 ```
 
 ## Useful commands
@@ -121,6 +133,17 @@ find smb_dump -name '*.ovpn' -o -name '*.tfvars' -o -name '.npmrc' -o -name 'vau
 # Validate a deploy key looks real (optional)
 ssh-keygen -l -f smb_dump/IT/deploy/ci_deploy_ed25519
 openssl x509 -in smb_dump/IT/onboarding/nw-deploy.pem -noout -subject
+
+# KeePass brute force (john-jumbo keepass2john, or hashcat -m 13400)
+keepass2john smb_dump/Finance/nordwind_passwords.kdbx > /tmp/kp.hash
+john --wordlist=smb_dump/IT/backups/password_audit_wordlist.txt /tmp/kp.hash
+
+# PKCS12 / JKS after reading passwords from unlocked KeePass
+openssl pkcs12 -in smb_dump/Operations/customs/broker_client_auth.p12 -noout -passin 'pass:…'
+keytool -list -keystore smb_dump/IT/cloud/nw-portal.jks -storepass '…'
+
+# .env dotfiles
+rg --hidden 'KEEPASS|KEYSTORE' smb_dump/
 ```
 
 ## Rules

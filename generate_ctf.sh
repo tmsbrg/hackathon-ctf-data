@@ -621,6 +621,17 @@ python3 "$ROOT/generate_filetypes.py"
 echo "==> Generating crypto material (ssh-keygen, openssl)..."
 python3 "$ROOT/generate_keys.py"
 
+# ── Vaults: KeePass, PKCS#12, JKS, .env ──────────────────────────────────────
+echo "==> Generating vaults (.kdbx, .p12, .jks, .env)..."
+if [[ -z "${KEYTOOL:-}" ]] && command -v keytool >/dev/null 2>&1; then
+  export KEYTOOL="$(command -v keytool)"
+fi
+if ! python3 -c "import pykeepass" 2>/dev/null; then
+  echo "    Installing pykeepass (requirements-generate.txt)..."
+  pip install -q -r "$ROOT/requirements-generate.txt"
+fi
+python3 "$ROOT/generate_vaults.py"
+
 # file count
 COUNT=$(find "$DUMP" -type f | wc -l)
 echo "==> Done. $COUNT files in smb_dump/"

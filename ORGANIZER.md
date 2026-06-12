@@ -42,6 +42,45 @@
 | 21 | **Bonus flag (kube)** | `IT/cloud/.kube/config` | `BONUS{kube_config_hunter}` | `rga --hidden` on kubeconfig |
 | 22 | MongoDB root password | `Operations/warehouse/docker-compose.yml` | `MongoNw-Docker-8842` | `rga` on compose |
 | 23 | Vault unseal key | `IT/legacy/vault.hcl` | `VaultNw-Unseal-8842-xK9m` | `rga` on `.hcl` |
+| 24 | **Bonus flag (KeePass)** | `Finance/nordwind_passwords.kdbx` | `BONUS{keepass_windmill_vault}` | Brute force master → open vault |
+| 25 | Datadog API key | same `.kdbx` entry | `dd_api_NwMonitor_8842secret` | After KeePass unlock |
+| 26 | Customs broker API | same `.kdbx` entry | `CustomsNw-API-8842` | After KeePass unlock |
+| 27 | PKCS12 password | same `.kdbx` → unlocks `Operations/customs/broker_client_auth.p12` | `P12Nw-8842!` | KeePass → `openssl pkcs12` |
+| 28 | JKS store password | same `.kdbx` → unlocks `IT/cloud/nw-portal.jks` | `JksNw-8842!` | KeePass → `keytool -list` |
+
+### KeePass brute force
+
+| Item | Value |
+|------|-------|
+| File | `Finance/nordwind_passwords.kdbx` |
+| Master password | `Nordwind2024` |
+| Hint | `IT/tickets/ticket_7734_keepass_policy.txt` (CompanyName + year) |
+| Wordlist | `IT/backups/password_audit_wordlist.txt` (contains the password) |
+
+```bash
+# john (install keepass2john from john-jumbo)
+keepass2john smb_dump/Finance/nordwind_passwords.kdbx > /tmp/kp.hash
+john --wordlist=smb_dump/IT/backups/password_audit_wordlist.txt /tmp/kp.hash
+
+# hashcat
+hashcat -m 13400 -a 0 kp.hash smb_dump/IT/backups/password_audit_wordlist.txt
+
+# keepassxc-cli (interactive)
+keepassxc-cli open smb_dump/Finance/nordwind_passwords.kdbx
+
+# pykeepass
+python3 -c "from pykeepass import PyKeePass; kp=PyKeePass('smb_dump/Finance/nordwind_passwords.kdbx', password='Nordwind2024'); print(kp.entries)"
+```
+
+### .env files (plaintext in dump)
+
+| File | Notable content |
+|------|-----------------|
+| `IT/deploy/.env` | Redis password, pointers to `.kdbx` / `.p12` / `.jks` |
+| `IT/deploy/.env.production` | SendGrid key (duplicate of yaml), `see_keepass_vault` placeholders |
+| `IT/cloud/.env.local` | Dev-only decoys |
+| `Finance/.env` | Points to `nordwind_passwords.kdbx` |
+| `IT/deploy_logs/.env.staging` | From filetypes pass |
 
 ## Config filetype decoys (no scoring value)
 
@@ -67,7 +106,7 @@ TruffleHog will flag the private keys — intentional. No passphrase on SSH keys
 
 ## Generator dependencies
 
-Regenerating the dump requires: `pandoc`, `zip`, `7z`, `exiftool`, `ssh-keygen`, `openssl`, Python 3 with `openpyxl`, `Pillow`, `reportlab`.
+Regenerating the dump requires: `pandoc`, `zip`, `7z`, `exiftool`, `ssh-keygen`, `openssl`, `keytool` (JDK), Python 3 with packages from `requirements-generate.txt` (`pip install -r requirements-generate.txt`).
 
 OCR is **not** required at generation time — scanned PDF/PNG are image-only by design.
 

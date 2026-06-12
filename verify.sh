@@ -4,6 +4,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 DUMP="$ROOT/smb_dump"
+export DUMP
 CACHE="${RGA_CACHE:-/tmp/rga-ctf-cache}"
 
 if [[ ! -d "$DUMP" ]]; then
@@ -137,6 +138,87 @@ else
   exit 1
 fi
 check_rga "Vault unseal (.hcl)"        'VaultNw-Unseal-8842-xK9m'
+
+echo ""
+echo "=== Vaults (.kdbx, .p12, .jks, .env) ==="
+check_contains "Redis in deploy .env" \
+  "$DUMP/IT/deploy/.env" 'RedisNw-Cache-8842!'
+check_contains "SendGrid in .env.production" \
+  "$DUMP/IT/deploy/.env.production" 'SG.NwMail2024.xK9secret'
+
+if openssl pkcs12 -in "$DUMP/Operations/customs/broker_client_auth.p12" \
+    -noout -passin 'pass:P12Nw-8842!' 2>/dev/null; then
+  echo "OK  PKCS12 broker cert (password unlocks)"
+else
+  echo "FAIL PKCS12 broker cert"
+  exit 1
+fi
+
+KEYTOOL_BIN="${KEYTOOL:-$(command -v keytool 2>/dev/null || true)}"
+if [[ -n "$KEYTOOL_BIN" ]] && \
+   "$KEYTOOL_BIN" -list -keystore "$DUMP/IT/cloud/nw-portal.jks" \
+     -storepass 'JksNw-8842!' >/dev/null 2>&1; then
+  echo "OK  JKS portal keystore (password unlocks)"
+else
+  echo "FAIL JKS portal keystore"
+  exit 1
+fi
+
+if ! python3 -c "import pykeepass" 2>/dev/null; then
+  echo "SKIP KeePass checks (pip install pykeepass)"
+else
+  python3 << 'PYEOF'
+import os, sys
+from pathlib import Path
+
+DUMP = Path(os.environ["DUMP"])
+kdbx = DUMP / "Finance/nordwind_passwords.kdbx"
+wordlist = DUMP / "IT/backups/password_audit_wordlist.txt"
+
+from pykeepass import PyKeePass
+from pykeepass.exceptions import CredentialsError
+
+def try_open(password: str) -> PyKeePass | None:
+    try:
+        return PyKeePass(str(kdbx), password=password)
+    except CredentialsError:
+        return None
+
+kp = try_open("Nordwind2024")
+if not kp:
+    print("FAIL KeePass master password")
+    sys.exit(1)
+print("OK  KeePass master password")
+
+flag = kp.find_entries(title="CTF bonus", first=True)
+if flag and "BONUS{keepass_windmill_vault}" in (flag.password or ""):
+    print("OK  KeePass bonus flag")
+else:
+    print("FAIL KeePass bonus flag")
+    sys.exit(1)
+
+dd = kp.find_entries(title="Datadog monitoring EU", first=True)
+if dd and dd.password == "dd_api_NwMonitor_8842secret":
+    print("OK  KeePass Datadog API key")
+else:
+    print("FAIL KeePass Datadog API key")
+    sys.exit(1)
+
+cracked = False
+for line in wordlist.read_text().splitlines():
+    line = line.strip()
+    if not line or line.startswith("#"):
+        continue
+    if try_open(line):
+        cracked = True
+        break
+if cracked:
+    print("OK  KeePass cracked via audit wordlist (brute force path)")
+else:
+    print("FAIL KeePass wordlist brute force")
+    sys.exit(1)
+PYEOF
+fi
 
 if command -v tesseract >/dev/null 2>&1; then
   if tesseract "$SCAN_PDF" stdout 2>/dev/null | grep -q '147258364'; then
