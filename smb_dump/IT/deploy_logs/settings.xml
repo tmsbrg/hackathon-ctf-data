@@ -1,0 +1,11 @@
+<!-- Maven settings — CI build agent template -->
+<settings>
+  <localRepository>/var/maven/repository</localRepository>
+  <servers>
+    <server>
+      <id>nordwind-releases</id>
+      <username>ci</username>
+      <password>ci_build_placeholder</password>
+    </server>
+  </servers>
+</settings>

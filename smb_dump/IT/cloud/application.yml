@@ -1,0 +1,16 @@
+# Spring Boot — Nordwind customer portal (staging)
+spring:
+  application:
+    name: nw-portal-staging
+  datasource:
+    url: jdbc:postgresql://nw-db-stg01.internal:5432/nordwind_staging
+    username: portal_stg
+    password: SpringStg_NwPortal_7xK!
+  mail:
+    host: smtp.sendgrid.net
+    username: apikey
+    password: SG.NwMail2024.xK9secret
+
+nordwind:
+  wms:
+    sync-endpoint: https://wms.nordwind-logistics.nl/api/v2

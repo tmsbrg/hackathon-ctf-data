@@ -1,0 +1,18 @@
+# Archived pipeline snippet — nw-portal (reference copy on SMB)
+stages:
+  - test
+  - build
+  - deploy
+
+test:
+  stage: test
+  script:
+    - npm ci
+    - npm test
+
+deploy_staging:
+  stage: deploy
+  script:
+    - echo "Deploy to staging — use vault for secrets"
+  only:
+    - develop

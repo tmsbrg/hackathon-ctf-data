@@ -1,0 +1,9 @@
+# Nordwind portal — deployment manifest (toml)
+[service]
+name = "nw-portal"
+port = 8080
+environment = "staging"
+
+[logging]
+level = "info"
+format = "json"

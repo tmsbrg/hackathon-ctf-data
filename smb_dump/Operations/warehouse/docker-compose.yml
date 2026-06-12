@@ -1,0 +1,13 @@
+# Local dev stack — Rotterdam DC warehouse tools (not production)
+version: "3.8"
+services:
+  mongo:
+    image: mongo:6
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: nw_dev
+      MONGO_INITDB_ROOT_PASSWORD: MongoNw-Docker-8842
+    ports:
+      - "27017:27017"
+  redis:
+    image: redis:7-alpine
+    command: redis-server --requirepass devonly_notprod

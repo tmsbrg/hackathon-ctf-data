@@ -48,6 +48,19 @@ These need **extra tooling** beyond plain `rga`. Not required for the main flag,
 | 12 | Executive portal reset (Dutch) | Helpdesk email export | `rga` / `rg` on `.eml` |
 | 13 | **Bonus flag** | Summer party photo metadata | `exiftool` |
 | 14 | Legacy Oracle password | IT backup — archive inside archive | `unzip` then `7z x` (rga won't read 7z) |
+| 15 | Redis cache password | Legacy IT config | `rga` on `.conf` |
+| 16 | Spring staging DB password | Cloud `application.yml` | `rga` on `.yml` |
+| 17 | SendGrid API key | Same Spring config | `rga` on `.yml` |
+| 18 | Terraform staging DB password | `terraform.tfvars` | `rga` on `.tfvars` |
+| 19 | GlobalProtect PSK | Executive VPN export | `rga` on `.ovpn` |
+| 20 | Private npm registry token | Deploy logs `.npmrc` | `rga --hidden` or `rg --hidden` (dotfile) |
+| 21 | **Bonus flag (kube)** | Kubernetes kubeconfig | `rga --hidden` on `.kube/config` |
+| 22 | MongoDB dev password | Warehouse `docker-compose.yml` | `rga` on compose |
+| 23 | Vault unseal key | Legacy `vault.hcl` | `rga` on `.hcl` |
+
+The dump also includes **decoy config cruft** in formats from real breach hunts: `.properties`, `.toml`, `.ora`, `server.xml`, `web.config`, `NuGet.Config`, `.netrc`, `.pgpass`, CI YAML, and more.
+
+**Real-looking crypto material** (generated with `ssh-keygen` / `openssl` for realism): deploy keys in `IT/deploy/`, Shanghai `id_ed25519`, TLS `.key` / `.crt` pairs, VPN CA inside `executive_globalprotect.ovpn`. TruffleHog will scream — these are CTF props, not production keys.
 
 ## Toolchain checklist
 
@@ -98,6 +111,16 @@ tesseract smb_dump/HR/exit_interviews/Mulder_contract_scan.pdf stdout 2>/dev/nul
 # Nested 7z inside zip
 unzip -l smb_dump/IT/backups/legacy_oracle_2019.zip
 unzip -p smb_dump/IT/backups/legacy_oracle_2019.zip configs.7z > /tmp/configs.7z && 7z x -so /tmp/configs.7z | rg -i oracle
+
+# Config-style extensions (yaml, tfvars, ovpn, npmrc, hcl, …)
+rga -i 'password|token|apikey|requirepass' smb_dump/IT/
+rga --hidden 'BONUS\{kube' smb_dump/   # dotfiles need --hidden
+rg --hidden 'npm_NwRegistry' smb_dump/IT/deploy_logs/
+find smb_dump -name '*.ovpn' -o -name '*.tfvars' -o -name '.npmrc' -o -name 'vault.hcl'
+
+# Validate a deploy key looks real (optional)
+ssh-keygen -l -f smb_dump/IT/deploy/ci_deploy_ed25519
+openssl x509 -in smb_dump/IT/onboarding/nw-deploy.pem -noout -subject
 ```
 
 ## Rules

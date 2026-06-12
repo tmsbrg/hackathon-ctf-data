@@ -1,0 +1,8 @@
+# Spring Cloud bootstrap — cloud config client
+spring:
+  application:
+    name: nw-portal
+  cloud:
+    config:
+      uri: https://config.nordwind.internal
+      fail-fast: false

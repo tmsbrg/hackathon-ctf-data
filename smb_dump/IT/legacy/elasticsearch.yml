@@ -1,0 +1,7 @@
+# Nordwind log cluster — nw-es01 (read-only archive)
+cluster.name: nordwind-logs
+node.name: nw-es01
+path.data: /var/lib/elasticsearch
+network.host: 127.0.0.1
+http.port: 9200
+xpack.security.enabled: true

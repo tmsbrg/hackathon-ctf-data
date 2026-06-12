@@ -83,6 +83,61 @@ else
   exit 1
 fi
 
+echo ""
+echo "=== Config filetype secrets (rga) ==="
+check_rga "Redis password (.conf)"     'RedisNw-Cache-8842!'
+check_rga "Spring DB pwd (.yml)"       'SpringStg_NwPortal_7xK!'
+check_rga "SendGrid key (.yml)"        'SG.NwMail2024.xK9secret'
+check_rga "Terraform DB (.tfvars)"     'TfNwDb_Staging_7xK!'
+check_rga "GlobalProtect PSK (.ovpn)"  'GP-Exec-PSK-2024-Rot'
+# dotfiles — rg/rga skip hidden files unless --hidden
+check_contains "npm registry token (.npmrc)" \
+  "$DUMP/IT/deploy_logs/.npmrc" 'npm_NwRegistry_8842token'
+check_contains "Kube bonus flag (.kube/config)" \
+  "$DUMP/IT/cloud/.kube/config" 'BONUS{kube_config_hunter}'
+check_rga "Mongo docker (.yml)"        'MongoNw-Docker-8842'
+
+echo ""
+echo "=== Crypto material (ssh-keygen / openssl) ==="
+if ssh-keygen -l -f "$DUMP/IT/deploy/ci_deploy_ed25519" >/dev/null 2>&1; then
+  echo "OK  CI deploy ed25519 key (valid)"
+else
+  echo "FAIL CI deploy ed25519 key"
+  exit 1
+fi
+if ssh-keygen -l -f "$DUMP/IT/deploy/id_rsa" >/dev/null 2>&1; then
+  echo "OK  Legacy RSA deploy key (valid)"
+else
+  echo "FAIL Legacy RSA deploy key"
+  exit 1
+fi
+if ssh-keygen -l -f "$DUMP/China_Office/.ssh/id_ed25519" >/dev/null 2>&1; then
+  echo "OK  Shanghai ed25519 key (valid)"
+else
+  echo "FAIL Shanghai ed25519 key"
+  exit 1
+fi
+if openssl x509 -in "$DUMP/IT/onboarding/nw-deploy.pem" -noout -subject >/dev/null 2>&1; then
+  echo "OK  Deploy TLS cert (openssl x509)"
+else
+  echo "FAIL Deploy TLS cert"
+  exit 1
+fi
+if openssl x509 -in "$DUMP/IT/onboarding/vpn-ca.crt" -noout -subject >/dev/null 2>&1; then
+  echo "OK  VPN CA cert (openssl x509)"
+else
+  echo "FAIL VPN CA cert"
+  exit 1
+fi
+if grep -q 'BEGIN CERTIFICATE' "$DUMP/IT/onboarding/executive_globalprotect.ovpn" \
+   && grep -q 'BEGIN CERTIFICATE' "$DUMP/IT/onboarding/vpn-ca.crt"; then
+  echo "OK  OVPN embeds real CA PEM"
+else
+  echo "FAIL OVPN CA embedding"
+  exit 1
+fi
+check_rga "Vault unseal (.hcl)"        'VaultNw-Unseal-8842-xK9m'
+
 if command -v tesseract >/dev/null 2>&1; then
   if tesseract "$SCAN_PDF" stdout 2>/dev/null | grep -q '147258364'; then
     echo "OK  Contractor BSN via OCR (pdf)"

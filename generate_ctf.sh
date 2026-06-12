@@ -27,6 +27,7 @@ DIRS=(
   "IT/backups"
   "IT/cloud"
   "IT/deploy_logs"
+  "IT/deploy"
   "IT/legacy"
   "IT/tickets"
   "Legal/contracts"
@@ -611,6 +612,14 @@ python3 "$ROOT/generate_advanced.py"
 # ── Company flavor: cruft, lore, PDFs, xlsx, email threads, duplicates ────────
 echo "==> Generating company flavor (Python)..."
 python3 "$ROOT/generate_flavor.py"
+
+# ── Config filetypes: .yaml, .tfvars, .ovpn, .env, vault.hcl, … ───────────────
+echo "==> Generating config filetypes (Python)..."
+python3 "$ROOT/generate_filetypes.py"
+
+# ── Real SSH/TLS material (ssh-keygen, openssl) ───────────────────────────────
+echo "==> Generating crypto material (ssh-keygen, openssl)..."
+python3 "$ROOT/generate_keys.py"
 
 # file count
 COUNT=$(find "$DUMP" -type f | wc -l)

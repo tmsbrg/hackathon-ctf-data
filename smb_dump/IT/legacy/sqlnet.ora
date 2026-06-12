@@ -1,0 +1,3 @@
+# Oracle Net config — archival
+NAMES.DIRECTORY_PATH= (TNSNAMES, EZCONNECT)
+SSL_VERSION=1.2

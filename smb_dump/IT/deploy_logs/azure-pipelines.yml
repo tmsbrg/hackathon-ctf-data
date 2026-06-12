@@ -1,0 +1,10 @@
+# Azure DevOps — mirror of legacy pipeline (unused)
+trigger:
+  - main
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - script: echo "Nordwind Logistics CI placeholder"
+    displayName: Smoke test

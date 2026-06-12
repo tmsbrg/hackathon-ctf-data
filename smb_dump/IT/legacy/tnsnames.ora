@@ -1,0 +1,9 @@
+# Oracle TNS — legacy NWERP (decommissioned 2019)
+NWERP =
+  (DESCRIPTION =
+    (ADDRESS = (PROTOCOL = TCP)(HOST = nw-oracle-legacy.internal)(PORT = 1521))
+    (CONNECT_DATA =
+      (SERVER = DEDICATED)
+      (SERVICE_NAME = NWERP.nordwind.internal)
+    )
+  )
