@@ -1,0 +1,5 @@
+INVOICE
+Vendor: PostNL
+Amount: EUR 7305.76
+Status: PAID
+Ref: NW-2024-4848

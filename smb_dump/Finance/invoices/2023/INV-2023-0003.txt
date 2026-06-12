@@ -1,0 +1,5 @@
+INVOICE
+Vendor: KPN Business
+Amount: EUR 5891.74
+Status: PAID
+Ref: NW-2023-9565

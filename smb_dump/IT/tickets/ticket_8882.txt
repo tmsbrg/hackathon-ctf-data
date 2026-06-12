@@ -1,0 +1,5 @@
+IT Ticket #8882
+Status: Closed
+Subject: VPN slow
+Resolution: Standard fix applied.
+Note: user asked to reset password to password123 — denied per policy.

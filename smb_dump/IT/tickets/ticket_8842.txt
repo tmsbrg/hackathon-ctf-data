@@ -1,0 +1,5 @@
+IT Ticket #8842
+Status: Closed
+Subject: Printer jam
+Resolution: Standard fix applied.
+Note: user asked to reset password to password123 — denied per policy.

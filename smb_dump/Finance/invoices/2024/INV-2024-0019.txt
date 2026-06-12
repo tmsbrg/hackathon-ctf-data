@@ -1,0 +1,5 @@
+INVOICE
+Vendor: Office Depot
+Amount: EUR 5591.30
+Status: PAID
+Ref: NW-2024-3041

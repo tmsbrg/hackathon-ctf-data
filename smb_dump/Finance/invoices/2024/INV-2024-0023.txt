@@ -1,0 +1,5 @@
+INVOICE
+Vendor: KPN Business
+Amount: EUR 6066.85
+Status: PAID
+Ref: NW-2024-3851

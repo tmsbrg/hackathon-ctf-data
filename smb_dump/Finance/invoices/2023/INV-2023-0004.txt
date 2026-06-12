@@ -1,0 +1,5 @@
+INVOICE
+Vendor: Office Depot
+Amount: EUR 8326.72
+Status: PAID
+Ref: NW-2023-4346

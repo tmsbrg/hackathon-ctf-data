@@ -1,0 +1,5 @@
+INVOICE
+Vendor: Ahoy Catering
+Amount: EUR 5339.88
+Status: PAID
+Ref: NW-2023-2343

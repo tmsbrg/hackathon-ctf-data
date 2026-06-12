@@ -1,0 +1,37 @@
+{
+  "export_date": "2024-10-01",
+  "source": "AFAS HR",
+  "employees": [
+    {
+      "id": "NW-00421",
+      "name": "Jan de Vries",
+      "department": "Operations",
+      "burgerservicenummer": "123456782",
+      "email": "j.devries@nordwind-logistics.nl",
+      "start_date": "2019-03-15"
+    },
+    {
+      "id": "NW-00887",
+      "name": "Sophie Bakker",
+      "department": "Finance",
+      "burgerservicenummer": "987654329",
+      "email": "s.bakker@nordwind-logistics.nl",
+      "start_date": "2021-06-01"
+    },
+    {
+      "id": "NW-00200",
+      "name": "Test User Sandbox",
+      "department": "IT",
+      "burgerservicenummer": "999999999",
+      "email": "test.user@nordwind-logistics.nl",
+      "note": "SANDBOX — invalid BSN for testing"
+    },
+    {
+      "id": "NW-01102",
+      "name": "Anna Smit",
+      "department": "Marketing",
+      "burgerservicenummer": "246813579",
+      "email": "a.smit@nordwind-logistics.nl"
+    }
+  ]
+}

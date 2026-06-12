@@ -1,0 +1,5 @@
+IT Ticket #8862
+Status: Closed
+Subject: Outlook sync
+Resolution: Standard fix applied.
+Note: user asked to reset password to password123 — denied per policy.

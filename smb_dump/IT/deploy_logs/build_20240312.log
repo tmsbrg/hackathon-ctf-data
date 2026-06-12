@@ -1,0 +1,11 @@
+[2024-03-12 14:02:11] INFO  Starting pipeline nw-portal-deploy #8842
+[2024-03-12 14:02:12] INFO  Checking out feature/shanghai-routes
+[2024-03-12 14:02:15] INFO  Running npm ci
+[2024-03-12 14:03:44] INFO  Running tests (142 passed, 0 failed)
+[2024-03-12 14:04:01] WARN  GITHUB_TOKEN not in env, using fallback from legacy config
+[2024-03-12 14:04:01] DEBUG export GITHUB_TOKEN=ghp_NwL0g1st1cs_BreachSim_a8f3c2
+[2024-03-12 14:04:02] INFO  Cloning private dependency nw-shared-ui
+[2024-03-12 14:05:33] INFO  Building Docker image nw-portal:20240312.8842
+[2024-03-12 14:08:19] INFO  Pushing to registry.nordwind.internal
+[2024-03-12 14:09:02] INFO  Deploy to staging OK
+[2024-03-12 14:09:03] INFO  Pipeline finished SUCCESS

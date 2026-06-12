@@ -1,0 +1,5 @@
+IT Ticket #8844
+Status: Closed
+Subject: Monitor flicker
+Resolution: Standard fix applied.
+Note: user asked to reset password to password123 — denied per policy.

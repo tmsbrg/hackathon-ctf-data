@@ -1,0 +1,11 @@
+{
+  "route_id": "RT-EU-0021",
+  "origin": "Rotterdam",
+  "destinations": [
+    "Antwerp",
+    "Rotterdam",
+    "Milan"
+  ],
+  "distance_km": 512,
+  "active": true
+}

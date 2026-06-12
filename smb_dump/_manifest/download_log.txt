@@ -1,0 +1,28 @@
+================================================================================
+ NORDWIND LOGISTICS BV — INCIDENT RESPONSE ARTIFACT
+ SMB mirror job: 2024-11-03T02:14:33Z  operator: red-team-svc
+ Source: \\nw-dc01\corp$, \\nw-dc01\finance$, \\nw-dc01\it$, \\nw-sh01\shared$
+================================================================================
+
+2024-11-03 02:14:33  START  robocopy \\nw-dc01\corp$\HR          -> ./HR
+2024-11-03 02:18:01  OK     847 files  1.2 GB
+2024-11-03 02:18:02  START  robocopy \\nw-dc01\finance$         -> ./Finance
+2024-11-03 02:22:44  OK     1203 files  890 MB
+2024-11-03 02:22:45  START  robocopy \\nw-dc01\it$              -> ./IT
+2024-11-03 02:31:12  OK     562 files  2.4 GB
+2024-11-03 02:31:13  START  robocopy \\nw-dc01\corp$\Legal       -> ./Legal
+2024-11-03 02:33:00  OK     98 files   340 MB
+2024-11-03 02:33:01  START  robocopy \\nw-dc01\corp$\Marketing   -> ./Marketing
+2024-11-03 02:35:22  OK     411 files  620 MB
+2024-11-03 02:35:23  START  robocopy \\nw-dc01\corp$\Operations -> ./Operations
+2024-11-03 02:38:55  OK     334 files  180 MB
+2024-11-03 02:38:56  START  robocopy \\nw-dc01\shared$          -> ./Shared
+2024-11-03 02:40:10  OK     156 files  45 MB
+2024-11-03 02:40:11  START  robocopy \\nw-sh01\shared$          -> ./China_Office
+2024-11-03 02:41:33  OK     89 files   210 MB
+2024-11-03 02:41:34  START  robocopy \\nw-dc01\archives$        -> ./Archives
+2024-11-03 02:55:00  OK     2204 files 4.1 GB
+2024-11-03 02:55:01  END    total: 5904 files  9.78 GB  errors: 0
+
+NOTE: Some paths contain legacy credentials marked for rotation Q1-2025.
+      Do not distribute outside IR team.

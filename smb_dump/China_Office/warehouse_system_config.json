@@ -1,0 +1,23 @@
+{
+  "system": "Nordwind WMS Shanghai",
+  "site_code": "CN-SHA-01",
+  "version": "2.4.1",
+  "locale": "zh-CN",
+  "admin_contact": "li.wei@nordwind-logistics.cn",
+  "database": {
+    "host": "10.88.42.10",
+    "name": "nw_wms_sha",
+    "user": "wms_service"
+  },
+  "integration": {
+    "eu_hq_endpoint": "https://wms.nordwind-logistics.nl/api/v2",
+    "api_key_label": "密码",
+    "api_key_value": "Nordwind_Shanghai_密钥_8842",
+    "sync_interval_minutes": 15
+  },
+  "labels": {
+    "username": "用户名",
+    "password": "密码",
+    "note": "仓库系统密钥 — 仅限运维团队"
+  }
+}

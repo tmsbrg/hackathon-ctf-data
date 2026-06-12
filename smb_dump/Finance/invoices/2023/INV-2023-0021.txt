@@ -1,0 +1,5 @@
+INVOICE
+Vendor: PostNL
+Amount: EUR 5689.02
+Status: PAID
+Ref: NW-2023-5533

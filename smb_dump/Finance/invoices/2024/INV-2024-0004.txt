@@ -1,0 +1,5 @@
+INVOICE
+Vendor: Shell Fleet
+Amount: EUR 1872.25
+Status: PAID
+Ref: NW-2024-8541

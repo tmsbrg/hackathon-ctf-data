@@ -1,0 +1,3 @@
+Shift log #0013
+Pallets processed: 285
+Incidents: 0

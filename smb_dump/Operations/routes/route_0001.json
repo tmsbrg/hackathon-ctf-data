@@ -1,0 +1,11 @@
+{
+  "route_id": "RT-EU-0001",
+  "origin": "Rotterdam",
+  "destinations": [
+    "Paris",
+    "Warsaw",
+    "Rotterdam"
+  ],
+  "distance_km": 623,
+  "active": true
+}

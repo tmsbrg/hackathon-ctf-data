@@ -1,0 +1,22 @@
+{
+  "project": "nordwind-aws-migration",
+  "status": "draft",
+  "owner": "d.jansen@nordwind-logistics.nl",
+  "regions": ["eu-west-1", "ap-east-1"],
+  "notes": "DO NOT COMMIT — local draft only",
+  "accounts": {
+    "production": {
+      "account_id": "884422115566",
+      "access_key_id": "AKIA4NORDWIND9SECRET",
+      "secret_access_key": "wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY",
+      "rotation_due": "2024-12-01"
+    },
+    "staging": {
+      "account_id": "112233445566",
+      "access_key_id": "AKIATESTNOTREAL00001",
+      "secret_access_key": "not-a-real-secret-key-here"
+    }
+  },
+  "s3_buckets": ["nw-logistics-docs", "nw-backups-eu"],
+  "terraform_state": "s3://nw-tf-state/migration.tfstate"
+}
