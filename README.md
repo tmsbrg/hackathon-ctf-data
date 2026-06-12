@@ -36,6 +36,38 @@ Find **all eight classified items** below. Each is real — buried in noise, oth
 
 Submit the **final flag** to score. Finding all eight proves you searched like a pro.
 
+## Extended challenges (bonus)
+
+These need **extra tooling** beyond plain `rga`. Not required for the main flag, but worth points if you run a leaderboard.
+
+| # | Target | Hint | Tools |
+|---|--------|------|-------|
+| 9 | Contractor BSN (valid 11-proef) | HR exit interview scan | `tesseract`, `ocrmypdf`, or read the image PDF |
+| 10 | WMS terminal password (Chinese) | Shanghai training folder screenshot | `tesseract`, or open the PNG |
+| 11 | Finance API key | Payroll spreadsheet — hidden tab | `unzip -p file.xlsx 'xl/**/*.xml' \| rg …` |
+| 12 | Executive portal reset (Dutch) | Helpdesk email export | `rga` / `rg` on `.eml` |
+| 13 | **Bonus flag** | Summer party photo metadata | `exiftool` |
+| 14 | Legacy Oracle password | IT backup — archive inside archive | `unzip` then `7z x` (rga won't read 7z) |
+
+## Toolchain checklist
+
+```bash
+rga / rg          # text, PDF text layer, docx, zip (not 7z or xlsx directly)
+trufflehog        # high-entropy secrets
+tesseract         # OCR for scanned PDFs and PNG screenshots
+exiftool          # image metadata (EXIF)
+7z                # extract .7z inside zip archives
+unzip             # peek inside .xlsx (Office Open XML is a zip)
+```
+
+Optional install:
+
+```bash
+# Debian/Ubuntu
+sudo apt install ripgrep-all trufflehog tesseract-ocr exiftool p7zip-full
+pip install openpyxl pillow reportlab   # only needed to regenerate the dump
+```
+
 ## Useful commands
 
 ```bash
@@ -53,6 +85,19 @@ trufflehog filesystem --no-update smb_dump/ 2>/dev/null
 
 # Rip into zips
 rga -i 'password|postgres|mysql' smb_dump/IT/backups/
+
+# XLSX hidden sheets (Office files are zip XML)
+unzip -p smb_dump/Finance/payroll/salary_bands_2024.xlsx 'xl/worksheets/*.xml' | rg -i 'fin_api|geheim'
+
+# EXIF metadata pass
+exiftool -a -u smb_dump/Shared/office_party_2024.jpg
+
+# OCR a scanned PDF (no text layer)
+tesseract smb_dump/HR/exit_interviews/Mulder_contract_scan.pdf stdout 2>/dev/null | rg BSN
+
+# Nested 7z inside zip
+unzip -l smb_dump/IT/backups/legacy_oracle_2019.zip
+unzip -p smb_dump/IT/backups/legacy_oracle_2019.zip configs.7z > /tmp/configs.7z && 7z x -so /tmp/configs.7z | rg -i oracle
 ```
 
 ## Rules

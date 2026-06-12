@@ -38,6 +38,7 @@ DIRS=(
   "Shared/meeting_notes"
   "Shared/recipes"
   "Shared/templates"
+  "Shared/photos"
   "China_Office/reports"
   "China_Office/training"
   "Archives/2019"
@@ -601,6 +602,11 @@ echo "Old project files — nothing sensitive" > /tmp/archive_zip/readme.txt
 echo "password=notused" > /tmp/archive_zip/config.ini
 (cd /tmp/archive_zip && zip -q "$DUMP/Archives/2020/project_legacy_2020.zip" ./*)
 rm -rf /tmp/archive_zip
+
+# ── Advanced formats: scanned PDF, PNG, XLSX, EML, EXIF JPG, zip>7z ─────────
+echo "==> Generating advanced artifacts (Python)..."
+export DUMP
+python3 "$ROOT/generate_advanced.py"
 
 # file count
 COUNT=$(find "$DUMP" -type f | wc -l)

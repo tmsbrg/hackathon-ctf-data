@@ -21,7 +21,24 @@
 | 5c | BSN Pieter Jansen | `Finance/payroll_Q3_2024.zip` → `employees.csv` | `111222333` |
 | 6 | Shanghai 密码 | `China_Office/warehouse_system_config.json` | `Nordwind_Shanghai_密钥_8842` |
 | 7 | Stripe key | `Finance/contracts/vendor_stripe_agreement.docx` | `sk_live_NwStripe2024xK9mP2qR7` |
-| 8 | **Final flag** | `Legal/board_minutes_Q4_2024.pdf` | `FLAG{smb_ripgrep_trufflehog_master}` |
+| 8 | **Final flag** | `Legal/board/board_minutes_Q4_2024.pdf` | `FLAG{smb_ripgrep_trufflehog_master}` |
+
+## Extended / bonus secrets
+
+| # | Item | Location | Value | Discovery |
+|---|------|----------|-------|-----------|
+| 9 | Contractor BSN | `HR/exit_interviews/Mulder_contract_scan.pdf` | `147258364` | OCR / visual (image-only PDF) |
+| 10 | WMS terminal 密码 | `China_Office/training/wms_terminal_screenshot.png` | `ShaWMS-2024-Rot` | OCR / open image |
+| 11 | Finance API key | `Finance/payroll/salary_bands_2024.xlsx` → hidden sheet `geheim` | `fin_api_NwQ3_8842secret` | `unzip -p … \| rg` |
+| 12 | Portal reset (Dutch) | `IT/tickets/helpdesk_reset_vandenberg.eml` | `PortalReset-2024-xK9` | `rga` on `.eml` |
+| 13 | Bonus flag (EXIF) | `Shared/office_party_2024.jpg` | `BONUS{exif_metadata_dig}` | `exiftool` |
+| 14 | Legacy Oracle pwd | `IT/backups/legacy_oracle_2019.zip` → `configs.7z` | `OrclNw2019!sys` | `unzip` + `7z x` |
+
+## Generator dependencies
+
+Regenerating the dump requires: `pandoc`, `zip`, `7z`, `exiftool`, Python 3 with `openpyxl`, `Pillow`, `reportlab`.
+
+OCR is **not** required at generation time — scanned PDF/PNG are image-only by design.
 
 ## Decoys (intentional noise)
 
@@ -38,8 +55,11 @@ rga 'AKIA4NORDWIND' smb_dump/
 rga 'ghp_NwL0g1st1cs' smb_dump/
 rga 'FLAG\{smb_ripgrep' smb_dump/
 trufflehog filesystem smb_dump/ --no-update
+exiftool -UserComment smb_dump/Shared/office_party_2024.jpg
+unzip -p smb_dump/Finance/payroll/salary_bands_2024.xlsx 'xl/worksheets/sheet2.xml' | rg fin_api
+7z x -so <(unzip -p smb_dump/IT/backups/legacy_oracle_2019.zip configs.7z) | rg OrclNw
 ```
 
 ## BSN 11-proef check
 
-All three valid BSNs pass the Dutch elfproef (weighted sum mod 11).
+All three core BSNs plus contractor BSN `147258364` pass the Dutch elfproef.
