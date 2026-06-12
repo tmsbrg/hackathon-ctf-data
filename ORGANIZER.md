@@ -46,6 +46,10 @@ OCR is **not** required at generation time — scanned PDF/PNG are image-only by
 - `IT/legacy/passwords_OLD.txt` — `admin/changeme`, `wachtwoord: Welkom123` (retired)
 - `Shared/recipes/coffee.txt` — contains word "geheim" in recipe context
 - Multiple `password123`, `test1234` across Marketing drafts
+- SMB cruft: `desktop.ini`, `Thumbs.db`, `.DS_Store`, `~$VPN_toegang_2024.docx` (Word lock — may cause rga/pandoc errors)
+- Duplicate filenames: `INV-2024-0007 (1).txt`, `route_0004_backup.json`, etc.
+- 20 lore files cross-referencing named employees (no secrets)
+- 3 benign `.xlsx`, 5 policy PDFs, 3-message office-move `.eml` thread
 
 ## Verification commands
 

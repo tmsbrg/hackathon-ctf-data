@@ -1,0 +1,3 @@
+EORI verification log excerpt
+Verified client EORI for Jan de Vries' route batch RT-EU-0012 — OK.
+Douane contact used checklist Brexit_border_checklist_NL.pdf.

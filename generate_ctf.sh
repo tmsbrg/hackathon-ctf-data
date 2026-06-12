@@ -608,6 +608,10 @@ echo "==> Generating advanced artifacts (Python)..."
 export DUMP
 python3 "$ROOT/generate_advanced.py"
 
+# ── Company flavor: cruft, lore, PDFs, xlsx, email threads, duplicates ────────
+echo "==> Generating company flavor (Python)..."
+python3 "$ROOT/generate_flavor.py"
+
 # file count
 COUNT=$(find "$DUMP" -type f | wc -l)
 echo "==> Done. $COUNT files in smb_dump/"

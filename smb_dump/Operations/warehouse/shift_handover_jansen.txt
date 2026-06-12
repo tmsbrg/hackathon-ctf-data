@@ -1,0 +1,3 @@
+Shift handover 2024-10-02 night -> day
+Outgoing: Pieter Jansen. Incoming: Jan de Vries.
+Bay 7 conveyor belt noisy — maintenance ticket #9018 opened by Daan Jansen.

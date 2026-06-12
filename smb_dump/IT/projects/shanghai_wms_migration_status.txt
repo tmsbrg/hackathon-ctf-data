@@ -1,0 +1,3 @@
+Project: Shanghai WMS integration
+PM: Daan Jansen. Business: Li Wei. Sponsor: L. Chen.
+Status: green. Go-live CN-SHA-01 complete. Hypercare until Nov 30.
