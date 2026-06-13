@@ -67,6 +67,14 @@ These need **extra tooling** beyond plain `rga`. Not required for the main flag,
 
 **`.env` files** in `IT/deploy/`, `Finance/`, etc. — some secrets in plaintext, others point at the KeePass vault.
 
+| # | Target | Hint | Tools |
+|---|--------|------|-------|
+| 29 | SAP vendor API key | Finance invoice folder legacy `.doc` | LibreOffice, `strings`, or `antiword` |
+| 30 | Legacy HR wachtwoord (Dutch) | Archived IT/HR procedure `.doc` | LibreOffice / `strings` on `.doc` |
+| 31 | Emergency access token | Payroll `.xlsx` roster | `unzip -p file.xlsx 'xl/**/*.xml' \| rg …` |
+| 32 | Shell Fleet API key | Routes fuel card `.xlsx` hidden tab | `unzip -p` on worksheet XML |
+| 33 | Archive export key | 2023 invoice index `.xls` (legacy Excel) | LibreOffice convert to csv/txt |
+
 The dump also includes **decoy config cruft** in formats from real breach hunts: `.properties`, `.toml`, `.ora`, `server.xml`, `web.config`, `NuGet.Config`, `.netrc`, `.pgpass`, CI YAML, and more.
 
 **Real-looking crypto material** (generated with `ssh-keygen` / `openssl` for realism): deploy keys in `IT/deploy/`, Shanghai `id_ed25519`, TLS `.key` / `.crt` pairs, VPN CA inside `executive_globalprotect.ovpn`. TruffleHog will scream — these are CTF props, not production keys.
@@ -74,7 +82,7 @@ The dump also includes **decoy config cruft** in formats from real breach hunts:
 ## Toolchain checklist
 
 ```bash
-rga / rg          # text, PDF text layer, docx, zip (not 7z or xlsx directly)
+rga / rg          # text, PDF text layer, docx, zip (not 7z, xlsx, or legacy .doc/.xls by default)
 trufflehog        # high-entropy secrets
 tesseract         # OCR for scanned PDFs and PNG screenshots
 exiftool          # image metadata (EXIF)
@@ -144,6 +152,15 @@ keytool -list -keystore smb_dump/IT/cloud/nw-portal.jks -storepass '…'
 
 # .env dotfiles
 rg --hidden 'KEEPASS|KEYSTORE' smb_dump/
+
+# Legacy Office — rga usually misses these
+libreoffice --headless --convert-to txt --outdir /tmp smb_dump/Finance/invoices/2024/SAP_vendor_integration_memo.doc
+rg sap_api /tmp/SAP_vendor_integration_memo.txt
+
+unzip -p smb_dump/Finance/payroll/emergency_access_roster_Q4.xlsx 'xl/sharedStrings.xml' | rg BgNw
+unzip -p smb_dump/Operations/routes/fuel_card_registry_2024.xlsx 'xl/worksheets/*.xml' | rg fleet_api
+
+libreoffice --headless --convert-to csv --outdir /tmp smb_dump/Finance/invoices/2023/archive_invoice_index_2023.xls
 ```
 
 ## Rules

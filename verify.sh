@@ -220,6 +220,73 @@ else:
 PYEOF
 fi
 
+echo ""
+echo "=== Office formats (.doc / .xlsx / .xls — unzip or LibreOffice) ==="
+lo_to_text() {
+  local src="$1"
+  local tmp
+  tmp=$(mktemp -d)
+  HOME="$tmp" libreoffice --headless --norestore --convert-to txt --outdir "$tmp" "$src" 2>/dev/null
+  cat "$tmp"/*.txt 2>/dev/null
+  rm -rf "$tmp"
+}
+
+lo_to_csv() {
+  local src="$1"
+  local tmp
+  tmp=$(mktemp -d)
+  HOME="$tmp" libreoffice --headless --norestore --convert-to csv --outdir "$tmp" "$src" 2>/dev/null
+  cat "$tmp"/*.csv 2>/dev/null
+  rm -rf "$tmp"
+}
+
+if rga -q 'sap_api_NwVendor_8842secret' "$DUMP/" 2>/dev/null; then
+  echo "WARN SAP key visible via rga (install-dependent — unzip/LO still valid)"
+else
+  echo "OK  SAP memo not indexed by rga (expected)"
+fi
+
+if lo_to_text "$DUMP/Finance/invoices/2024/SAP_vendor_integration_memo.doc" \
+   | grep -q 'sap_api_NwVendor_8842secret'; then
+  echo "OK  SAP API key (.doc)"
+else
+  echo "FAIL SAP API key (.doc)"
+  exit 1
+fi
+
+if lo_to_text "$DUMP/HR/policies/IT_account_reset_procedure_2019.doc" \
+   | grep -q 'LegacyHr-Wachtwoord-8842!'; then
+  echo "OK  Legacy HR wachtwoord (.doc)"
+else
+  echo "FAIL Legacy HR wachtwoord (.doc)"
+  exit 1
+fi
+
+EMERGENCY_XLSX="$DUMP/Finance/payroll/emergency_access_roster_Q4.xlsx"
+if unzip -p "$EMERGENCY_XLSX" xl/sharedStrings.xml 2>/dev/null | grep -q 'BgNw-Emergency-2024-xK9' \
+   || unzip -p "$EMERGENCY_XLSX" xl/worksheets/sheet1.xml 2>/dev/null | grep -q 'BgNw-Emergency'; then
+  echo "OK  Emergency token (.xlsx unzip)"
+else
+  echo "FAIL Emergency token (.xlsx)"
+  exit 1
+fi
+
+FUEL_XLSX="$DUMP/Operations/routes/fuel_card_registry_2024.xlsx"
+if unzip -p "$FUEL_XLSX" xl/worksheets/*.xml 2>/dev/null | grep -q 'fleet_api_NwShell_8842secret'; then
+  echo "OK  Fleet API key (xlsx hidden sheet unzip)"
+else
+  echo "FAIL Fleet API key (xlsx hidden sheet)"
+  exit 1
+fi
+
+XLS_FILE="$DUMP/Finance/invoices/2023/archive_invoice_index_2023.xls"
+if lo_to_csv "$XLS_FILE" | grep -q 'ArchNw-Xls-8842legacy'; then
+  echo "OK  Archive export key (.xls)"
+else
+  echo "FAIL Archive export key (.xls)"
+  exit 1
+fi
+
 if command -v tesseract >/dev/null 2>&1; then
   if tesseract "$SCAN_PDF" stdout 2>/dev/null | grep -q '147258364'; then
     echo "OK  Contractor BSN via OCR (pdf)"

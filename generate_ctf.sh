@@ -632,6 +632,14 @@ if ! python3 -c "import pykeepass" 2>/dev/null; then
 fi
 python3 "$ROOT/generate_vaults.py"
 
+# ── Legacy Office: .doc, .xlsx, .xls via LibreOffice ─────────────────────────
+echo "==> Generating Office formats (LibreOffice)..."
+if ! command -v libreoffice >/dev/null 2>&1 && ! command -v soffice >/dev/null 2>&1; then
+  echo "ERROR: libreoffice required for .doc/.xlsx/.xls generation"
+  exit 1
+fi
+python3 "$ROOT/generate_office.py"
+
 # file count
 COUNT=$(find "$DUMP" -type f | wc -l)
 echo "==> Done. $COUNT files in smb_dump/"
